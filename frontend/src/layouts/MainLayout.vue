@@ -17,7 +17,7 @@
           label="Inventario"
           to="/inventory"
         />
-        <q-btn flat label="Salir" to="/login" />
+        <q-btn flat label="Salir" @click="logout" />
       </q-toolbar>
     </q-header>
 
@@ -28,7 +28,14 @@
 </template>
 
 <script setup>
+  import { useRouter } from 'vue-router'
   import { useAuthStore } from 'src/stores/auth-store'
 
+  const router = useRouter()
   const authStore = useAuthStore()
+
+  const logout = async () => {
+    authStore.logout()
+    await router.push('/login')
+  }
 </script>
