@@ -71,4 +71,12 @@ public class UserServiceImpl  implements UserService{
         return userMapper.toDto(saved);
     }
 
+    @Override
+    public UserDto findByLogin(String login) {
+        User userDb = userRepository.findByLoginWithRol(login)
+            .orElseThrow(() -> new ElementNotFoundException("Usuario no encontrado con login: " + login));
+
+        return userMapper.toDto(userDb);
+    }
+
 }

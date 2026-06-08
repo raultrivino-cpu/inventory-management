@@ -12,9 +12,8 @@
 
           <q-card-section>
             <q-input
-              v-model="email"
-              label="Correo"
-              type="email"
+              v-model="username"
+              label="Usuario"
               outlined
               class="q-mb-md"
             />
@@ -28,7 +27,12 @@
           </q-card-section>
 
           <q-card-actions align="right">
-            <q-btn color="primary" label="Ingresar" @click="login" />
+            <q-btn
+              color="primary"
+              label="Ingresar"
+              :loading="loading"
+              @click="handleLogin"
+            />
           </q-card-actions>
         </q-card>
       </q-page>
@@ -38,11 +42,39 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useQuasar } from 'quasar'
+import { useAuthStore } from 'src/stores/auth-store'
 
-const email = ref('')
+const router = useRouter()
+const $q = useQuasar()
+const authStore = useAuthStore()
+
+const username = ref('')
 const password = ref('')
+const loading = ref(false)
 
-const login = () => {
-  console.log('Login:', email.value, password.value)
+const handleLogin = async () => {
+  try {
+    loading.value = true
+
+    await authStore.signIn(username.value, password.value)
+
+    $q.notify({
+      type: 'positive',
+      message: 'Inicio de sesión exitoso',
+    })
+
+    await router.push('/companies')
+  } catch (error) {
+    console.error(error)
+
+    $q.notify({
+      type: 'negative',
+      message: 'Usuario o contraseña incorrectos',
+    })
+  } finally {
+    loading.value = false
+  }
 }
 </script>

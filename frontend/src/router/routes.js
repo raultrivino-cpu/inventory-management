@@ -10,14 +10,17 @@ const routes = [
       {
         path: 'companies',
         component: () => import('pages/CompaniesPage.vue'),
+        meta: { requiresAuth: true }
       },
       {
         path: 'products',
         component: () => import('pages/ProductsPage.vue'),
+        meta: { requiresAuth: true, requiresAdmin: true }
       },
       {
         path: 'inventory',
         component: () => import('pages/InventoryPage.vue'),
+        meta: { requiresAuth: true, requiresAdmin: true }
       },
     ],
   },

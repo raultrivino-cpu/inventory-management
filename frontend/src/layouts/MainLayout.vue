@@ -5,8 +5,18 @@
         <q-toolbar-title>Inventory Management</q-toolbar-title>
 
         <q-btn flat label="Empresas" to="/companies" />
-        <q-btn flat label="Productos" to="/products" />
-        <q-btn flat label="Inventario" to="/inventory" />
+        <q-btn
+          v-if="authStore.isAdmin"
+          flat
+          label="Productos"
+          to="/products"
+        />
+        <q-btn
+          v-if="authStore.isAdmin"
+          flat
+          label="Inventario"
+          to="/inventory"
+        />
         <q-btn flat label="Salir" to="/login" />
       </q-toolbar>
     </q-header>
@@ -18,5 +28,7 @@
 </template>
 
 <script setup>
-//
+  import { useAuthStore } from 'src/stores/auth-store'
+
+  const authStore = useAuthStore()
 </script>
