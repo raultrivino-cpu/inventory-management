@@ -19,6 +19,21 @@ import com.rtrivino.inventory.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * REST controller responsible for user management operations.
+ *
+ * <p>
+ * Users are stored in the database and authenticated through Spring Security.
+ * Each user is associated with a role that determines the operations available
+ * in the system.
+ * </p>
+ *
+ * <p>
+ * This controller exposes standard CRUD endpoints for managing application
+ * users. Password handling, including BCrypt encryption, is delegated to the
+ * service layer.
+ * </p>
+ */
 @RestController
 @RequestMapping("/api/usuarios")
 @RequiredArgsConstructor
@@ -26,24 +41,24 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public List<UserDto> findAll(){
+    public List<UserDto> findAll() {
         return userService.findAll();
     }
 
     @GetMapping("/{id}")
-    public UserDto findById(@PathVariable Long id){
+    public UserDto findById(@PathVariable Long id) {
         return userService.findById(id);
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED) 
-    public User create(@RequestBody UserDto usuario){
+    @ResponseStatus(HttpStatus.CREATED)
+    public User create(@RequestBody UserDto usuario) {
         return userService.save(usuario);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id){
+    public void delete(@PathVariable Long id) {
         userService.delete(id);
     }
 

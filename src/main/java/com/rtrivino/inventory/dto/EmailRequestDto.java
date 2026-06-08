@@ -5,6 +5,11 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Request body used to send an inventory PDF report by email.
+ *
+ * <p>The email field is validated before the request reaches the service layer.</p>
+ */
 @Getter
 @Setter
 public class EmailRequestDto {

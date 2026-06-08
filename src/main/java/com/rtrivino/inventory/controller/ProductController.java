@@ -19,6 +19,21 @@ import com.rtrivino.inventory.service.ProductService;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * REST controller responsible for product management operations.
+ *
+ * <p>
+ * Products are registered under a company and can be associated with one
+ * or more categories. Product information is also used by the inventory module
+ * to display products grouped by company and to generate inventory reports.
+ * </p>
+ *
+ * <p>
+ * This controller exposes standard CRUD endpoints for product management.
+ * Administrative access is controlled by Spring Security according to the
+ * configured user roles.
+ * </p>
+ */
 @RestController
 @RequestMapping("/api/productos")
 @RequiredArgsConstructor
@@ -26,29 +41,29 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping
-    public List<ProductDto> findAll(){
+    public List<ProductDto> findAll() {
         return productService.findAll();
     }
 
     @GetMapping("/{id}")
-    public ProductDto findById(@PathVariable Long id){
+    public ProductDto findById(@PathVariable Long id) {
         return productService.findById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Product create(@RequestBody ProductDto productoDto){
+    public Product create(@RequestBody ProductDto productoDto) {
         return productService.save(productoDto);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id){
+    public void delete(@PathVariable Long id) {
         productService.delete(id);
     }
 
     @PutMapping("/{id}")
-    public ProductDto update(@PathVariable Long id, @RequestBody ProductDto productoDto){
+    public ProductDto update(@PathVariable Long id, @RequestBody ProductDto productoDto) {
         return productService.update(id, productoDto);
     }
 }

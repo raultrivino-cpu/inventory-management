@@ -22,12 +22,40 @@ import com.rtrivino.inventory.service.ProductService;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Service implementation responsible for generating inventory PDF reports.
+ *
+ * <p>
+ * The inventory report is generated for a specific company and includes the
+ * products associated with that company, their categories and prices in the
+ * supported currencies.
+ * </p>
+ *
+ * <p>
+ * The PDF is created in memory using OpenPDF and returned as a byte array.
+ * This allows the same generation logic to be reused by different flows, such
+ * as direct PDF download and email attachment delivery.
+ * </p>
+ */
 @Service
 @RequiredArgsConstructor
 public class InventoryPdfServiceImpl implements InventoryPdfService {
 
     private final ProductService productService;
 
+    /**
+     * Generates a PDF inventory report for the provided company NIT.
+     *
+     * <p>
+     * The method retrieves the products associated with the company, builds
+     * a landscape PDF document and adds a table containing the main inventory
+     * information displayed in the frontend.
+     * </p>
+     *
+     * @param nitEmpresa company identifier used to filter inventory products
+     * @return generated PDF content as a byte array
+     * @throws RuntimeException if the PDF generation process fails
+     */
     @Override
     public byte[] generateInventoryPdfByCompany(String nitEmpresa) {
         List<ProductDto> products = productService.findByCompanyNit(nitEmpresa);
@@ -77,9 +105,12 @@ public class InventoryPdfServiceImpl implements InventoryPdfService {
                 addBodyCell(table, product.getNombre(), bodyFont);
                 addBodyCell(table, product.getCaracteristicas(), bodyFont);
                 addBodyCell(table, formatCategories(product.getCategorias()), bodyFont);
-                addBodyCell(table, product.getPrecioPesos() != null ? product.getPrecioPesos().toString() : "-", bodyFont);
-                addBodyCell(table, product.getPrecioDolares() != null ? product.getPrecioDolares().toString() : "-", bodyFont);
-                addBodyCell(table, product.getPrecioEuros() != null ? product.getPrecioEuros().toString() : "-", bodyFont);
+                addBodyCell(table, product.getPrecioPesos() != null ? product.getPrecioPesos().toString() : "-",
+                        bodyFont);
+                addBodyCell(table, product.getPrecioDolares() != null ? product.getPrecioDolares().toString() : "-",
+                        bodyFont);
+                addBodyCell(table, product.getPrecioEuros() != null ? product.getPrecioEuros().toString() : "-",
+                        bodyFont);
             }
 
             document.add(table);
@@ -91,6 +122,13 @@ public class InventoryPdfServiceImpl implements InventoryPdfService {
         }
     }
 
+    /**
+     * Adds a formatted header cell to the PDF table.
+     *
+     * @param table target PDF table
+     * @param text  header text
+     * @param font  font used to render the header
+     */
     private void addHeaderCell(PdfPTable table, String text, Font font) {
         PdfPCell cell = new PdfPCell(new Phrase(text, font));
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -98,12 +136,25 @@ public class InventoryPdfServiceImpl implements InventoryPdfService {
         table.addCell(cell);
     }
 
+    /**
+     * Adds a formatted body cell to the PDF table.
+     *
+     * @param table target PDF table
+     * @param text  body text
+     * @param font  font used to render the body cell
+     */
     private void addBodyCell(PdfPTable table, String text, Font font) {
         PdfPCell cell = new PdfPCell(new Phrase(text != null ? text : "-", font));
         cell.setPadding(5);
         table.addCell(cell);
     }
 
+    /**
+     * Converts the product category list into a readable comma-separated text.
+     *
+     * @param categories product categories
+     * @return category names separated by comma, or {@code "-"} when empty
+     */
     private String formatCategories(List<CategoryDto> categories) {
         if (categories == null || categories.isEmpty()) {
             return "-";

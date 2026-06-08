@@ -11,9 +11,23 @@ import com.rtrivino.inventory.service.CompanyService;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Service implementation responsible for company business operations.
+ *
+ * <p>
+ * This service provides the application logic for creating, retrieving,
+ * updating and deleting companies. Companies are a core resource because
+ * products and inventory queries are associated with them.
+ * </p>
+ *
+ * <p>
+ * Entity lookup errors are handled by throwing domain-specific exceptions
+ * when a requested company does not exist.
+ * </p>
+ */
 @Service
 @RequiredArgsConstructor
-public class CompanyServiceImpl implements CompanyService{
+public class CompanyServiceImpl implements CompanyService {
 
     private final CompanyRepository companyRepository;
 
@@ -29,7 +43,8 @@ public class CompanyServiceImpl implements CompanyService{
 
     @Override
     public Company findById(String nit) {
-        return companyRepository.findById(nit).orElseThrow(() -> new ElementNotFoundException("Compañia no encontrada"));
+        return companyRepository.findById(nit)
+                .orElseThrow(() -> new ElementNotFoundException("Compañia no encontrada"));
 
     }
 
@@ -44,9 +59,10 @@ public class CompanyServiceImpl implements CompanyService{
                 .orElseThrow(() -> new ElementNotFoundException("Compañía no encontrada con id: " + nit));
 
         companyDb.setNombre(empresa.getNombre());
-        companyDb.setDireccion(empresa.getDireccion());;
+        companyDb.setDireccion(empresa.getDireccion());
+        ;
         companyDb.setTelefono(empresa.getTelefono());
-        
+
         return companyRepository.save(companyDb);
-    } 
+    }
 }

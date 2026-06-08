@@ -1,4 +1,4 @@
- package com.rtrivino.inventory.service.impl;
+package com.rtrivino.inventory.service.impl;
 
 import java.util.List;
 
@@ -11,9 +11,22 @@ import com.rtrivino.inventory.service.RoleService;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Service implementation responsible for role business operations.
+ *
+ * <p>
+ * Roles define the authorization level assigned to users in the system.
+ * This service provides CRUD operations for role management.
+ * </p>
+ *
+ * <p>
+ * Application endpoint access is later enforced by Spring Security based
+ * on the roles assigned to authenticated users.
+ * </p>
+ */
 @Service
 @RequiredArgsConstructor
-public class RoleServiceImpl implements RoleService{
+public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;
 

@@ -5,6 +5,12 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * DTO used to expose product information to the frontend.
+ *
+ * <p>It includes resolved company and category information so product and
+ * inventory views can display readable data without additional lookups.</p>
+ */
 @Getter
 @Setter
 public class ProductDto {

@@ -11,15 +11,28 @@ import com.rtrivino.inventory.service.CustomerService;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Service implementation responsible for customer business operations.
+ *
+ * <p>
+ * This service handles standard customer CRUD operations. Customers are
+ * part of the business domain and can be associated with purchase orders.
+ * </p>
+ *
+ * <p>
+ * When a requested customer cannot be found, the service raises a controlled
+ * exception to be handled by the global exception handler.
+ * </p>
+ */
 @Service
 @RequiredArgsConstructor
-public class CustomerServiceImpl implements CustomerService{
-    
+public class CustomerServiceImpl implements CustomerService {
+
     private final CustomerRepository customerRepository;
 
     @Override
     public Customer save(Customer customer) {
-       return customerRepository.save(customer);
+        return customerRepository.save(customer);
     }
 
     @Override
@@ -29,7 +42,7 @@ public class CustomerServiceImpl implements CustomerService{
 
     @Override
     public Customer findById(Long id) {
-         return customerRepository.findById(id).orElseThrow(() -> new ElementNotFoundException("Cliente no encontrado"));
+        return customerRepository.findById(id).orElseThrow(() -> new ElementNotFoundException("Cliente no encontrado"));
     }
 
     @Override
@@ -47,7 +60,7 @@ public class CustomerServiceImpl implements CustomerService{
         customerDb.setApellido(cliente.getApellido());
         customerDb.setTelefono(cliente.getTelefono());
         customerDb.setMail(cliente.getMail());
-        
+
         return customerRepository.save(customerDb);
     }
 

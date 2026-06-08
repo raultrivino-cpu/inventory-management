@@ -13,9 +13,23 @@ import com.rtrivino.inventory.service.PurchaseOrderService;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Service implementation responsible for purchase order business operations.
+ *
+ * <p>
+ * Purchase orders represent customer transactions in the domain model.
+ * This service provides standard CRUD operations and delegates persistence
+ * to the repository layer.
+ * </p>
+ *
+ * <p>
+ * Missing purchase orders are reported through controlled exceptions so
+ * the API can return consistent error responses.
+ * </p>
+ */
 @Service
 @RequiredArgsConstructor
-public class PurchaseOrderServiceImpl implements PurchaseOrderService{
+public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
     private final PurchaseOrderRepository purchaseOrderRepository;
     private final PurchaseOrderMapper purchaseOrderMapper;
@@ -31,14 +45,15 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService{
     @Override
     public List<PurchaseOrderDto> findAll() {
         return purchaseOrderRepository.findAll()
-            .stream()
-            .map(purchaseOrderMapper::toDto)
-            .toList();      
+                .stream()
+                .map(purchaseOrderMapper::toDto)
+                .toList();
     }
 
     @Override
     public PurchaseOrderDto findById(Long id) {
-        PurchaseOrder purchaseOrder = purchaseOrderRepository.findById(id).orElseThrow(() -> new ElementNotFoundException("Orden no encontrada")); 
+        PurchaseOrder purchaseOrder = purchaseOrderRepository.findById(id)
+                .orElseThrow(() -> new ElementNotFoundException("Orden no encontrada"));
         return purchaseOrderMapper.toDto(purchaseOrder);
     }
 
