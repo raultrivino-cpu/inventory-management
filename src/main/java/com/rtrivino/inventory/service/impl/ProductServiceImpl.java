@@ -65,5 +65,13 @@ public class ProductServiceImpl implements ProductService{
         return productMapper.toDto(saved);
     }
 
+    @Override
+    public List<ProductDto> findByCompanyNit(String nitEmpresa) {
+         return productRepository.findByEmpresaNit(nitEmpresa)
+            .stream()
+            .map(productMapper::toDto)
+            .toList();
+    }
+
 
 }

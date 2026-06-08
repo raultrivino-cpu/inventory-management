@@ -11,4 +11,5 @@ public interface ProductService {
     ProductDto findById(Long id);
     void delete(Long id);
     ProductDto update(Long id, ProductDto productoDto);
+    List<ProductDto> findByCompanyNit(String nitEmpresa);
 }
