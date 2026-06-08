@@ -13,14 +13,22 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class InventoryEmailServiceImpl implements InventoryEmailService{
+public class InventoryEmailServiceImpl implements InventoryEmailService {
 
     private final InventoryPdfService inventoryPdfService;
     private final JavaMailSender javaMailSender;
 
     @Override
     public void sendInventoryPdfByCompany(String nitEmpresa, String email) {
-        try{
+        if (email == null || email.isBlank()) {
+            throw new IllegalArgumentException("El correo destino es obligatorio");
+        }
+
+        if (!email.matches("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")) {
+            throw new IllegalArgumentException("El formato del correo destino no es válido");
+        }
+
+        try {
             byte[] pdf = inventoryPdfService.generateInventoryPdfByCompany(nitEmpresa);
 
             MimeMessage message = javaMailSender.createMimeMessage();
@@ -29,11 +37,10 @@ public class InventoryEmailServiceImpl implements InventoryEmailService{
             helper.setTo(email);
             helper.setSubject("Reporte de inventario");
             helper.setText("Hola,\n\nAdjunto encontrarás el reporte de inventario solicitado.\n\nSaludos.");
-            helper.addAttachment("Inventario-"+nitEmpresa+".pdf", new ByteArrayResource(pdf));
-
+            helper.addAttachment("Inventario-" + nitEmpresa + ".pdf", new ByteArrayResource(pdf));
 
             javaMailSender.send(message);
-        }catch(Exception ex){
+        } catch (Exception ex) {
             throw new RuntimeException("Error enviando correo de inventario", ex);
         }
     }

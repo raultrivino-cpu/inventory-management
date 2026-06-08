@@ -9,6 +9,7 @@ import com.rtrivino.inventory.service.InventoryEmailService;
 import com.rtrivino.inventory.service.InventoryPdfService;
 import com.rtrivino.inventory.service.ProductService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @RestController
@@ -54,7 +54,7 @@ public class InventoryController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void sendInventoryPdfByEmail(
             @PathVariable String nitEmpresa,
-            @RequestBody EmailRequestDto emailRequestDto) {
+            @Valid @RequestBody EmailRequestDto emailRequestDto) {
         inventoryEmailService.sendInventoryPdfByCompany(
                 nitEmpresa,
                 emailRequestDto.getEmail());

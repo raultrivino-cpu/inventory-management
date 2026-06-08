@@ -145,6 +145,7 @@
             label="Correo destino"
             type="email"
             outlined
+            :rules="emailRules"
           />
         </q-card-section>
 
@@ -182,6 +183,12 @@ const sending = ref(false)
 
 const showEmailDialog = ref(false)
 const email = ref('')
+
+const emailRules = [
+  (value) => !!value || 'El correo es obligatorio',
+  (value) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) || 'Ingrese un correo válido',
+]
 
 const columns = [
   {
@@ -342,6 +349,8 @@ const downloadPdf = async () => {
   }
 }
 
+const isValidEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+
 const sendPdfByEmail = async () => {
   if (!selectedCompanyNit.value) {
     $q.notify({
@@ -358,6 +367,15 @@ const sendPdfByEmail = async () => {
     })
     return
   }
+
+   if (!isValidEmail(email.value)) {
+    $q.notify({
+      type: 'warning',
+      message: 'Debes ingresar un correo válido',
+    })
+    return
+  }
+
 
   try {
     sending.value = true
