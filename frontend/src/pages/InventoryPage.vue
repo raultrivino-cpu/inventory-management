@@ -295,10 +295,51 @@ const loadInventoryByCompany = async () => {
 }
 
 const downloadPdf = async () => {
-  $q.notify({
-    type: 'info',
-    message: 'La descarga del PDF la conectamos en el siguiente paso',
-  })
+  if (!selectedCompanyNit.value) {
+    $q.notify({
+      type: 'warning',
+      message: 'Debes seleccionar una empresa',
+    })
+    return
+  }
+
+  try {
+    downloading.value = true
+
+    const response = await api.get(
+      `/inventario/empresa/${selectedCompanyNit.value}/pdf`,
+      {
+        headers: getAuthHeaders(),
+        responseType: 'blob',
+      },
+    )
+
+    const blob = new Blob([response.data], { type: 'application/pdf' })
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+
+    link.href = url
+    link.setAttribute('download', `inventario-${selectedCompanyNit.value}.pdf`)
+    document.body.appendChild(link)
+    link.click()
+
+    link.remove()
+    window.URL.revokeObjectURL(url)
+
+    $q.notify({
+      type: 'positive',
+      message: 'PDF descargado correctamente',
+    })
+  } catch (error) {
+    console.error(error)
+
+    $q.notify({
+      type: 'negative',
+      message: 'No fue posible descargar el PDF',
+    })
+  } finally {
+    downloading.value = false
+  }
 }
 
 const sendPdfByEmail = async () => {
