@@ -362,6 +362,16 @@ POST   /api/empresas
 PUT    /api/empresas/{nit}
 DELETE /api/empresas/{nit}
 ```
+Ejemplo del mensaje para POST y PUT
+
+```http
+{
+    "nit": "901654321-7",
+    "nombre": "Tecnologías Andinas S.A.S.",
+    "direccion": "Carrera 15 # 93-47, Bogotá D.C., Colombia",
+    "telefono": "7459821"
+}
+```
 
 ---
 
@@ -374,7 +384,19 @@ POST   /api/productos
 PUT    /api/productos/{id}
 DELETE /api/productos/{id}
 ```
+Ejemplo del mensaje para POST y PUT
 
+```http
+{
+    "nombre": "PlayStation 5 Slim",
+    "caracteristicas": "Consola de videojuegos Sony con lector Blu-ray",
+    "precioPesos": 2499000.00,
+    "precioDolares": 620.00,
+    "precioEuros": 580.00,
+    "nitEmpresa": "900789456-2",
+    "categorias": [1, 2],
+}
+```
 ---
 
 ### Categorías
@@ -386,7 +408,95 @@ POST   /api/categorias
 PUT    /api/categorias/{id}
 DELETE /api/categorias/{id}
 ```
+Ejemplo del mensaje para POST y PUT
 
+```http
+{
+    "nombre": "Juguetes",
+    "caracteristicas": "Juguetes electrónicos"
+}
+```
+---
+
+### Clientes
+
+```http
+GET    /api/clientes
+GET    /api/clientes/{id}
+POST   /api/clientes
+PUT    /api/clientes/{id}
+DELETE /api/clientes/{id}
+```
+Ejemplo del mensaje para POST y PUT
+
+```http
+{
+    "identificacion": "52369874",
+    "tipoId": "CC",
+    "nombre": "María",
+    "apellido": "González",
+    "telefono": "3119876543",
+    "mail": "maria.gonzalez@gmail.com"
+}
+```
+---
+
+### Ordenes
+
+```http
+GET    /api/ordenes
+GET    /api/ordenes/{id}
+POST   /api/ordenes
+PUT    /api/ordenes/{id}
+DELETE /api/ordenes/{id}
+```
+Ejemplo del mensaje para POST y PUT
+
+```http
+{
+    "fecha": "2026-06-06",
+    "clienteId": 1,
+    "productos": [7]
+}
+```
+---
+
+### Rol
+
+```http
+GET    /api/roles
+GET    /api/roles/{id}
+POST   /api/roles
+PUT    /api/roles/{id}
+DELETE /api/roles/{id}
+```
+Ejemplo del mensaje para POST y PUT
+
+```http
+{
+    "nombre": "ROLE_ADMIN"
+}
+```
+---
+
+### Usuarios
+
+```http
+GET    /api/usuarios
+GET    /api/usuarios/{id}
+POST   /api/usuarios
+PUT    /api/usuarios/{id}
+DELETE /api/usuarios/{id}
+```
+Ejemplo del mensaje para POST y PUT
+
+```http
+{
+    "login": "Usuario",
+    "rol": "ROLE_EXTERNAL",
+    "password": "09876Test"
+}
+```
 ---
 
 ### Inventario
@@ -395,6 +505,8 @@ DELETE /api/categorias/{id}
 GET  /api/inventario/empresa/{nitEmpresa}
 GET  /api/inventario/empresa/{nitEmpresa}/pdf
 POST /api/inventario/empresa/{nitEmpresa}/email
+
+
 ```
 
 El inventario se consulta por empresa. El sistema trae los productos asociados a la empresa seleccionada.

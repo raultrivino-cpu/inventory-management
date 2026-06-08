@@ -14,10 +14,25 @@ import com.rtrivino.inventory.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Service implementation responsible for user business operations.
+ *
+ * <p>
+ * This service manages application users and delegates entity/DTO conversion
+ * to the user mapper. It also applies password encryption using BCrypt before
+ * storing or updating user credentials.
+ * </p>
+ *
+ * <p>
+ * When updating a user, the password is only re-encoded if a non-empty value
+ * is provided, allowing user data to be updated without forcing a password
+ * change.
+ * </p>
+ */
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl  implements UserService{
-    
+public class UserServiceImpl implements UserService {
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
@@ -27,21 +42,22 @@ public class UserServiceImpl  implements UserService{
         User userEntity = userMapper.toEntity(user);
 
         userEntity.setContrasena(passwordEncoder.encode(userEntity.getContrasena()));
-        return userRepository.save(userEntity);   
+        return userRepository.save(userEntity);
     }
 
     @Override
     public List<UserDto> findAll() {
         return userRepository.findAll()
-            .stream()
-            .map(userMapper::toDto)
-            .toList();
+                .stream()
+                .map(userMapper::toDto)
+                .toList();
     }
 
     @Override
     public UserDto findById(Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new ElementNotFoundException("Usuario no encontrado"));
-    
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ElementNotFoundException("Usuario no encontrado"));
+
         return userMapper.toDto(user);
     }
 
@@ -54,7 +70,7 @@ public class UserServiceImpl  implements UserService{
     public UserDto update(Long id, UserDto usuario) {
         User userDb = userRepository.findById(id)
                 .orElseThrow(() -> new ElementNotFoundException("Usuario no encontrado con id: " + id));
-    
+
         User userEntity = userMapper.toEntity(usuario);
 
         userDb.setLogin(userEntity.getLogin());
@@ -67,14 +83,14 @@ public class UserServiceImpl  implements UserService{
                     passwordEncoder.encode(userEntity.getContrasena()));
         }
 
-        User saved = userRepository.save(userDb); 
+        User saved = userRepository.save(userDb);
         return userMapper.toDto(saved);
     }
 
     @Override
     public UserDto findByLogin(String login) {
         User userDb = userRepository.findByLoginWithRol(login)
-            .orElseThrow(() -> new ElementNotFoundException("Usuario no encontrado con login: " + login));
+                .orElseThrow(() -> new ElementNotFoundException("Usuario no encontrado con login: " + login));
 
         return userMapper.toDto(userDb);
     }
