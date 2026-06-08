@@ -343,6 +343,14 @@ const downloadPdf = async () => {
 }
 
 const sendPdfByEmail = async () => {
+  if (!selectedCompanyNit.value) {
+    $q.notify({
+      type: 'warning',
+      message: 'Debes seleccionar una empresa',
+    })
+    return
+  }
+
   if (!email.value) {
     $q.notify({
       type: 'warning',
@@ -351,10 +359,36 @@ const sendPdfByEmail = async () => {
     return
   }
 
-  $q.notify({
-    type: 'info',
-    message: 'El envío por correo lo conectamos después del PDF',
-  })
+  try {
+    sending.value = true
+
+    await api.post(
+      `/inventario/empresa/${selectedCompanyNit.value}/email`,
+      {
+        email: email.value,
+      },
+      {
+        headers: getAuthHeaders(),
+      },
+    )
+
+    $q.notify({
+      type: 'positive',
+      message: 'Correo enviado correctamente',
+    })
+
+    email.value = ''
+    showEmailDialog.value = false
+  } catch (error) {
+    console.error(error)
+
+    $q.notify({
+      type: 'negative',
+      message: 'No fue posible enviar el correo',
+    })
+  } finally {
+    sending.value = false
+  }
 }
 
 const formatCategories = (categories) => {
