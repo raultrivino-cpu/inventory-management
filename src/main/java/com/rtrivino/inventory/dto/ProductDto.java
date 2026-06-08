@@ -15,13 +15,14 @@ public class ProductDto {
     private BigDecimal precioDolares;
     private BigDecimal precioEuros;
     private String nitEmpresa;
-    private List<Long> categorias;
+    private String nombreEmpresa;
+    private List<CategoryDto> categorias;
    
     public ProductDto() {
     }
 
     public ProductDto(Long id, String nombre, String caracteristicas, BigDecimal precioPesos, BigDecimal precioDolares,
-            BigDecimal precioEuros, String nitEmpresa, List<Long> categorias) {
+            BigDecimal precioEuros, String nitEmpresa, String nombreEmpresa,  List<CategoryDto> categorias) {
         this.id = id;
         this.nombre = nombre;
         this.caracteristicas = caracteristicas;
@@ -29,6 +30,7 @@ public class ProductDto {
         this.precioDolares = precioDolares;
         this.precioEuros = precioEuros;
         this.nitEmpresa = nitEmpresa;
+        this.nombreEmpresa = nombreEmpresa;
         this.categorias = categorias;
     }
 

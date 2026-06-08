@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import com.rtrivino.inventory.dto.CategoryDto;
 import com.rtrivino.inventory.dto.ProductDto;
 import com.rtrivino.inventory.entity.Category;
 import com.rtrivino.inventory.entity.Company;
@@ -22,14 +23,19 @@ public class ProductMapper {
     private final CompanyRepository companyRepository;
     private final CategoryRepository categoryRepository;
 
-
-    public Product toEntity(ProductDto productDto){
+    public Product toEntity(ProductDto productDto) {
         Product producto = new Product();
 
         Company companyDb = companyRepository.findById(productDto.getNitEmpresa())
-                .orElseThrow(() -> new ElementNotFoundException("Compañía no encontrada con id: " + productDto.getNitEmpresa()));
+                .orElseThrow(() -> new ElementNotFoundException(
+                        "Compañía no encontrada con id: " + productDto.getNitEmpresa()));
 
-        List<Category> categorias = categoryRepository.findAllById(productDto.getCategorias());
+        List<Long> categoryIds = productDto.getCategorias()
+                .stream()
+                .map(CategoryDto::getId)
+                .toList();
+
+        List<Category> categorias = categoryRepository.findAllById(categoryIds);
 
         producto.setNombre(productDto.getNombre());
         producto.setCaracteristicas(productDto.getCaracteristicas());
@@ -52,7 +58,13 @@ public class ProductMapper {
         productDto.setPrecioEuros(product.getPrecioEuros());
         productDto.setPrecioPesos(product.getPrecioPesos());
         productDto.setNitEmpresa(product.getEmpresa().getNit());
-        productDto.setCategorias(product.getCategorias().stream().map(Category::getId).toList());
+        productDto.setNombreEmpresa(product.getEmpresa().getNombre());
+        productDto.setCategorias(
+                product.getCategorias()
+                        .stream().map(category -> new CategoryDto(
+                                category.getId(),
+                                category.getNombre()))
+                        .toList());
 
         return productDto;
     }
